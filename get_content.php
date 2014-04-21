@@ -1,6 +1,6 @@
 <?php
 //fixed link
-$link="http://tw.leaderg.com/article/index?sn=9735";
+$link="https://tw.news.yahoo.com/";
 //GET link
 if($link=null)
   $link=$_GET["link"];
@@ -10,15 +10,17 @@ if($link=null)
 
 $og1=new og;
 class og{
-  var $image_link;
-  var $des;
+  var $image;
+  var $title;
+  var $site_name;
+  var $description;
   function og()
   {
-    $this->image_link = "none";
-    $this->des = "none";
+    $this->image = "none";
+    $this->description = "none";
   }
   function show_og_content(){
-    echo $this->image_link.",".$this->des;
+    echo $this->image.",".$this->description;
   }
 }
 $og1->show_og_content();
