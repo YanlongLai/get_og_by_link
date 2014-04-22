@@ -31,7 +31,7 @@ class og{
 }
 
 $link_page=file_get_contents($link);
-preg_match_all('#<meta (property|name)=[\'"]([^>]*)[\'"] content=[\'"]([^>]*)[\'"][^"]*>#i', $link_page, $og_infos);
+preg_match_all('#<meta (property|name)=[\'"]([^>]*)[\'"] content=[\'"]([^>]*)[\'"][^"]*>#i', $link_page, $og_infos, PREG_SET_ORDER);
 //preg_match_all('#<meta property=[\'"]([^>]*)[\'"] content=[\'"]([^>]*)[\'"].>#i', $link_page, $og_infos, PREG_SET_ORDER);
 foreach ($og_infos as $og_info){
   if (strpos ($og_info[2], "image"))
@@ -49,7 +49,7 @@ foreach ($og_infos as $og_info){
 }
 //$json_d=json_decode($json_e);
 //print_r($json_d);
-print_r($og_infos);
+//print_r($og_infos);
 
 //$comicVol=count($match2[0]);
 
