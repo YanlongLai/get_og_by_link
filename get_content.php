@@ -2,7 +2,8 @@
 //fixed link
 //GET link
 $link=urldecode($_GET["link"]);
-//$link="https://tw.yahoo.com/";
+//$link="http://atedev.wordpress.com/2007/11/23/%E6%AD%A3%E8%A6%8F%E8%A1%A8%E7%A4%BA%E5%BC%8F-regular-expression/";
+//$link="https://tw.yahoo.com";
 //$link=urldecode("http%3a%2f%2fgoo.gl%2fLZbaPp");
 //POST link
 /*
@@ -26,19 +27,17 @@ class og{
   function show_og_content(){
     $json_e = json_encode( (array) $this );
     //echo $this->image.",".$this->description;
-    echo $json_e;
+    echo $json_e."\n";
   }
 }
 
 $link_page=file_get_contents($link);
-preg_match_all('#<meta (property|name)=[\'"]([^>]*)[\'"] content=[\'"]([^>]*)[\'"][^"]*>#i', $link_page, $og_infos, PREG_SET_ORDER);
+preg_match_all('#<meta (property|name)=[\'"]([^>]*)[\'"][ |\n]content=[\'"]([^>]*)[\'"][^"]*>#', $link_page, $og_infos, PREG_SET_ORDER);
+//echo $link_page;
 //preg_match_all('#<meta property=[\'"]([^>]*)[\'"] content=[\'"]([^>]*)[\'"].>#i', $link_page, $og_infos, PREG_SET_ORDER);
 foreach ($og_infos as $og_info){
   if (strpos ($og_info[2], "image"))
   $og1->image=$og_info[3];
-  else if (strpos ($og_info[2], "Image"))
-  $og1->image=$og_info[3];
-
   if (strpos ($og_info[2], "title"))
   $og1->title=$og_info[3];
   if (strpos ($og_info[2], "site_name"))
@@ -47,10 +46,22 @@ foreach ($og_infos as $og_info){
   $og1->description=$og_info[3];
   //print_r($og_unit);
 }
+
+if($og1->image=="none"){
+  preg_match_all('#<img src=[\'"]([^\'"]*)[\'"] [^>]*>#', $link_page, $og_imgs, PREG_SET_ORDER);
+  $og1->image=$og_imgs[0][1];
+}
+
+//print_r($og_imgs);
+
 //$json_d=json_decode($json_e);
 //print_r($json_d);
 //print_r($og_infos);
-
+/*
+if (in_array($argv[1], array('-log'))) {
+  print_r($og_infos);
+}
+ */
 //$comicVol=count($match2[0]);
 
 $og1->show_og_content();
