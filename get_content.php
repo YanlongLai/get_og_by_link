@@ -12,11 +12,11 @@ $link=@urldecode($_GET["link"]);
 
 //Main code
 $og1=new og;
-ob_start();
+//ob_start();
 if(test_link($link))
 parser_link($link, $result);
 $og1->show_og_content();
-ob_end_flush();
+//ob_end_flush();
 //Test
 //print_r($og_infos);
 //print_r($og_imgs);
