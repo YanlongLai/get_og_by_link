@@ -1,5 +1,7 @@
 <?php
-function userContent($displayname, $userCont, $imageUrl, $forumName, $desc, $subject, $accountPic){
+$image_count=0;
+function userContent($displayname, $userCont, $imageUrl, $forumName, $desc, $subject, $accountPic, $website){
+  global $image_count;
 ?>
 <div class='wrap' style="margin: 10px 10px 0 20px; background-color:#FFF; width: 548px; padding: 20px 20px; border-bottom: 0; border-top-left-radius: 5px; border-top-right-radius: 5px; border-bottom-left-radius: 5px; border-bottom-right-radius: 5px;
 border: 1px solid;border-top-color: rgb(229, 230, 233);border-top-style: solid;border-top-width: 1px;border-right-color: rgb(223, 224, 228);border-right-style: solid;border-right-width: 1px;border-bottom-color: rgb(208, 209, 213);border-bottom-style: solid;border-bottom-width: 1px;
@@ -8,12 +10,17 @@ border-left-color: rgb(223, 224, 228);border-left-style: solid;border-left-width
 <img style="width: 114px;height: 114px;" id=account_img src="/api/file/download_photo.php?sn=<?php echo $accountPic;?>">
 </div>
 <div class='article' style="margin-bottom: 10px; width: 400px; height: 102px; text-align: left; background-color: #fff; float: left;padding: 10px 20px 0 12px;border: 1px solid;border-top-color: rgb(229, 230, 233);border-top-style: solid;border-top-width: 1px;border-right-color: rgb(223, 224, 228);border-right-style: solid;border-right-width: 1px;border-bottom-color: rgb(208, 209, 213);border-bottom-style: solid;border-bottom-width: 1px;border-left-color: rgb(223, 224, 228);border-left-style: solid;border-left-width: 1px;border-color: #e5e6e9 #dfe0e4 #d0d1d5; font-family: Georgia, 'lucida grande',tahoma,verdana,arial,sans-serif;line-height: 16px;font-size: 12px;color: #141823;">
-<div class=account><?php echo $displayname;?>:</div>
+<div class=account style="font-weight: bold;"><?php echo $displayname;?>:</div>
 <?php echo $userCont;?>
 </div>
+<a style="text-decoration:none;" target="_blank" href="<?php echo $website;?>">
 <?php
-if($imageUrl!=NULL)
-echo '<div class="top" style=" background-color: #FFF;"><img width="548px" src="'.$imageUrl.'"></div>';
+  if($imageUrl!=NULL){
+  $time=(int) microtime(true);
+  echo '<div class="top" style=" background-color: #FFF;"><img id="img_'.$image_count.'" width="548px"></div>';
+  echo '<script type="text/javascript">$("#img_'.$image_count.'").attr("src","'.$imageUrl.'");</script>';
+  $image_count++;
+}
 ?>
 <div class='bottom' style="background-color: #FFF; ">
 <div class="title" style="font-family: Georgia, 'lucida grande',tahoma,verdana,arial,sans-serif;font-size: 18px;font-weight: 500;line-height: 22px;margin-bottom: 4px;max-height: 44px;overflow: hidden;word-wrap: break-word;">
@@ -25,14 +32,14 @@ echo '<div class="top" style=" background-color: #FFF;"><img width="548px" src="
 <div class="site_name" style="color: #adb2bb;font-size: 12px;">
 <?php echo $subject;?>
 </div>
-</div>
+</div></a>
 </div>
 <?php
 }
 ?>
 
 <?php
-function pcp($forumSn, $forumName, $accountSn, $lang, $likeButton ){
+function pcp($forumSn, $forumName, $accountSn, $lang, $likeButton, $dirDate, $accountCount, $numForumLikeAccount ){
 ?>
 <div class="contentArea_pcp">
 <span class="like_bt"><a id="likeButton_<?php echo $forumSn;?>" href="javascript:I_Like_This(<?php echo $forumSn.", ".$accountSn.", ".$lang;?>)"><?php echo $likeButton;?></a></span><!--like_bt-->
@@ -55,8 +62,10 @@ function pcp($forumSn, $forumName, $accountSn, $lang, $likeButton ){
 <img src="/image/email_share_bt.png" alt="Share on Email"></a></span>
 </span><!--share_index_bt-->
 </span><!--share_cont-->
-<span id="like_count_<?php echo $forumSn;?>" class="like_count" style="display: inline;">・<span class="whoLike"><a class="wholikecbox" id="whoLike_<?php echo $forumSn;?>" href="/comment/forum/get_like_account?sn=6" alt="" title="Yanlong"><img src="/image/Fb_like_button.png" width="20" height="18"> 1</a></span></span><!--like_count-->・
-<span class="time_cont">2014-04-11 23:54:38</span></div>
+<span id="like_count_<?php echo $forumSn;?>" class="like_count" <?php if ($numForumLikeAccount <= 0) echo "style=\"display:none;\"";?>>・
+<span class="whoLike"><a class="wholikecbox" id="whoLike_<?php echo $forumSn;?>" href="/comment/forum/get_like_account?sn=<?php echo $forumSn;?>" alt="<?php echo $accountCount?>" title="<?php echo $accountCount?>">
+<img src="/image/Fb_like_button.png" width="20" height="18"> <?php echo $numForumLikeAccount;?></a></span></span><!--like_count-->・
+<span class="time_cont"><?php echo $dirDate;?></span></div>
 <?php
 }
 ?>

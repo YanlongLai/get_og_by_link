@@ -13,8 +13,21 @@ $link=@urldecode($_GET["link"]);
 //Main code
 $og1=new og;
 //ob_start();
+
+//Time test
+//$time_start = microtime(true);
+
 if(test_link($link))
 parser_link($link, $result);
+
+//$time_end = microtime(true);
+//$time = $time_end - $time_start;
+//echo "Function in $time seconds\n";
+
+//$time_end2 = microtime(true);
+//$time = $time_end2 - $time_end;
+//echo "Function in $time seconds\n";
+
 $og1->show_og_content();
 //ob_end_flush();
 //Test
@@ -52,7 +65,7 @@ function test_link($url)
   {
     //link ok
     //$result = fread($dh,8192);
-    $result = fread($dh,8192);
+    $result = fread($dh,256);
     return true;
   }
   else
@@ -65,30 +78,46 @@ function parser_link($link, $result){
   global $og1;
   global $og_infos;
   global $og_imgs;
-  //$link_page=file_get_contents($link);
-  //preg_match_all('#<meta (property|name)=[\'"]([^>]*)[\'"][ |\n]content=[\'"]([^>]*)[\'"][^"]*>#', $link_page, $og_infos, PREG_SET_ORDER);
+  $result=file_get_contents($link);
   preg_match_all('#<meta (property|name)=[\'"]([^>]*)[\'"][ |\n]content=[\'"]([^>]*)[\'"][^"]*>#', $result, $og_infos, PREG_SET_ORDER);
+  //preg_match_all('#<meta (property|name)=[\'"]([^>]*)[\'"][ |\n]content=[\'"]([^>]*)[\'"][^"]*>#', $result, $og_infos, PREG_SET_ORDER);
   //echo $link_page;
   //preg_match_all('#<meta property=[\'"]([^>]*)[\'"] content=[\'"]([^>]*)[\'"].>#i', $link_page, $og_infos, PREG_SET_ORDER);
   foreach ($og_infos as $og_info){
-    if (stripos ($og_info[2], "image")!==false)
+  
+  //Search
+    if (strpos ($og_info[2], "og:image")!==false)
       $og1->image=$og_info[3];
-    if (stripos ($og_info[2], "title")!==false)
+    if (strpos ($og_info[2], "og:title")!==false)
       $og1->title=$og_info[3];
     else if (stripos ($og_info[2], "author")!==false)
       $og1->title=$og_info[3];
-    if (stripos ($og_info[2], "site_name")!==false)
+    if (strpos ($og_info[2], "og:site_name")!==false)
       $og1->site_name=$og_info[3];
-    else if(stripos ($og_info[2], "generator")!==false)
+    else if(strpos ($og_info[2], "generator")!==false)
       $og1->site_name=$og_info[3];
-    if (stripos ($og_info[2], "description")!==false)
+    if (strpos ($og_info[2], "og:description")!==false)
+      $og1->description=$og_info[3];
+
+  //Fuzzy search
+    if (stripos ($og_info[2], "image")!==false && $og1->image=="none")
+      $og1->image=$og_info[3];
+    if (stripos ($og_info[2], "title")!==false && $og1->title=="none")
+      $og1->title=$og_info[3];
+    else if (stripos ($og_info[2], "author")!==false && $og1->title=="none")
+      $og1->title=$og_info[3];
+    if (stripos ($og_info[2], "site_name")!==false && $og1->site_name=="none")
+      $og1->site_name=$og_info[3];
+    else if(stripos ($og_info[2], "generator")!==false && $og1->site_name=="none")
+      $og1->site_name=$og_info[3];
+    if (stripos ($og_info[2], "description")!==false && $og1->description=="none")
       $og1->description=$og_info[3];
     //print($og_info[3]."\n");
     //print_r($og_unit);
   }
   //Find the First image
   if($og1->image=="none"){
-    if(preg_match_all('#<img src=[\'"]([^\'"]*)[\'"] [^>]*>#', $link_page, $og_imgs, PREG_SET_ORDER))
+    if(preg_match_all('#<img src=[\'"]([^\'"]*)[\'"] [^>]*>#', $result, $og_imgs, PREG_SET_ORDER))
       $og1->image=$og_imgs[0][1];
     if($og1->image==null)
       $og1->image="none";
