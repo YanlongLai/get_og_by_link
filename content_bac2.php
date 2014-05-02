@@ -1,18 +1,17 @@
 <?php
 $image_count=0;
 //include(getenv("DOCUMENT_ROOT")."/includePUX4QF93/global.php");
-function userContent($displayname, $userCont, $imageUrl, $forumName, $desc, $subject, $accountPic, $website, $forumSn, $createAccountSn){
+function userContent($displayname, $userCont, $imageUrl, $forumName, $desc, $subject, $accountPic, $website){
   global $image_count;
 ?>
-  <div id=forum_<?php echo $forumSn;?> onmousemove='ShowDeleteForum(<?php echo $forumSn;?>,<?php echo $createAccountSn;?>)' onmouseout='HideDeleteForum(<?php echo $forumSn;?>)' class='wrap' style="margin: 10px 10px 0 20px; background-color:#FFF; width: 548px; padding: 20px 20px; border-bottom: 0; border-top-left-radius: 5px; border-top-right-radius: 5px; border-bottom-left-radius: 5px; border-bottom-right-radius: 5px;
+<div class='wrap' style="margin: 10px 10px 0 20px; background-color:#FFF; width: 548px; padding: 20px 20px; border-bottom: 0; border-top-left-radius: 5px; border-top-right-radius: 5px; border-bottom-left-radius: 5px; border-bottom-right-radius: 5px;
 border: 1px solid;border-top-color: rgb(229, 230, 233);border-top-style: solid;border-top-width: 1px;border-right-color: rgb(223, 224, 228);border-right-style: solid;border-right-width: 1px;border-bottom-color: rgb(208, 209, 213);border-bottom-style: solid;border-bottom-width: 1px;
-border-left-color: rgb(223, 224, 228);border-left-style: solid;border-left-width: 1px;border-color: #e5e6e9 #dfe0e4 #d0d1d5; min-height: 110px;">
+border-left-color: rgb(223, 224, 228);border-left-style: solid;border-left-width: 1px;border-color: #e5e6e9 #dfe0e4 #d0d1d5;">
 <div class=account_image style="width: 114px; float: left; height: 114px; text-align: left; font-size: 15px; font-weight: bold;">
 <img style="width: 114px;height: 114px;" id=account_img src="/api/file/download_photo.php?sn=<?php echo $accountPic;?>">
 </div>
-<div class='article' style="margin-bottom: 10px; width: 400px; height: 112px; text-align: left; background-color: #fff; float: left;padding: 0px 20px 0px 12px;border: 1px solid;border-top-color: rgb(229, 230, 233);border-top-style: solid;border-top-width: 1px;border-right-color: rgb(223, 224, 228);border-right-style: solid;border-right-width: 1px;border-bottom-color: rgb(208, 209, 213);border-bottom-style: solid;border-bottom-width: 1px;border-left-color: rgb(223, 224, 228);border-left-style: solid;border-left-width: 1px;border-color: #e5e6e9 #dfe0e4 #d0d1d5; font-family: Georgia, 'lucida grande',tahoma,verdana,arial,sans-serif;line-height: 16px;font-size: 12px;color: #141823;">
-<div class=account style="font-weight: bold; line-height: 25px;"><?php echo $displayname;?>:
-<a href="javascript:Delete_Forum(<?php echo $forumSn;?>)" id='forumDeleteBt_<?php echo $forumSn;?>' style="display:none;"><img style="float: right;" src="/image/close.png"></a></div>
+<div class='article' style="margin-bottom: 10px; width: 400px; height: 102px; text-align: left; background-color: #fff; float: left;padding: 10px 20px 0 12px;border: 1px solid;border-top-color: rgb(229, 230, 233);border-top-style: solid;border-top-width: 1px;border-right-color: rgb(223, 224, 228);border-right-style: solid;border-right-width: 1px;border-bottom-color: rgb(208, 209, 213);border-bottom-style: solid;border-bottom-width: 1px;border-left-color: rgb(223, 224, 228);border-left-style: solid;border-left-width: 1px;border-color: #e5e6e9 #dfe0e4 #d0d1d5; font-family: Georgia, 'lucida grande',tahoma,verdana,arial,sans-serif;line-height: 16px;font-size: 12px;color: #141823;">
+<div class=account style="font-weight: bold;"><?php echo $displayname;?>:</div>
 <?php echo $userCont;?>
 </div>
 <a style="text-decoration:none;" target="_blank" href="<?php echo $website;?>">
@@ -34,7 +33,7 @@ border-left-color: rgb(223, 224, 228);border-left-style: solid;border-left-width
 <div class="title" style="font-family: Georgia, 'lucida grande',tahoma,verdana,arial,sans-serif;font-size: 18px;font-weight: 500;line-height: 22px;margin-bottom: 4px;max-height: 44px;overflow: hidden;word-wrap: break-word;">
 <?php echo $forumName;?>
 </div>
-<div class="descriptipn" style=" font-family: Georgia, 'lucida grande',tahoma,verdana,arial,sans-serif;line-height: 16px;font-size: 12px;color: #141823; margin-bottom: 5px;">
+<div class="descriptipn" style=" font-family: Georgia, 'lucida grande',tahoma,verdana,arial,sans-serif;line-height: 16px;font-size: 12px;color: #141823;">
 <?php echo $desc;?>
 </div>
 <div class="site_name" style="color: #adb2bb;font-size: 12px;">
@@ -74,6 +73,76 @@ function pcp($forumSn, $forumName, $accountSn, $lang, $likeButton, $dirDate, $ac
 <span class="whoLike"><a class="wholikecbox" id="whoLike_<?php echo $forumSn;?>" href="/comment/forum/get_like_account?sn=<?php echo $forumSn;?>" alt="<?php echo $accountCount?>" title="<?php echo $accountCount?>">
 <img src="/image/Fb_like_button.png" width="20" height="18"> <?php echo $numForumLikeAccount;?></a></span></span><!--like_count-->・
 <span class="time_cont"><?php echo $dirDate;?></span></div>
+<?php
+}
+?>
+
+
+<?php
+function userComment($sn, $forumSn){
+?>
+<div class="comment_article" id="comment_<?php echo $sn;?>">
+<?php
+  $sqlCF = "SELECT sn, message, accountSn, createTimeSec FROM commentForm WHERE forumSn = '$forumSn'";
+  //echo $sqlCF."@@".getenv("DOCUMENT_ROOT");
+  $resultCF = mysql_query($sqlCF, $dbLink);
+  while ($rowCF = mysql_fetch_array($resultCF)) {
+    $cfSn = $rowCF[sn];
+    $cfMessage = $rowCF[message];
+    $cfAccountSn = $rowCF[accountSn];
+    $cfAccountType = GtAccount_GetType($cfAccountSn);
+    $cfCreateDate = GtTime_GetDateTime2(GtTime_ConvertToBrowserTimeSec($rowCF[createTimeSec]));
+
+    if ($cfMessageAccountType == $GT_ACCOUNT_TYPE_FACEBOOK_USER) {
+      $sqlAccount = "SELECT fbPictureUrl FROM account WHERE sn = '$cfAccountSn'";
+      $resultAccount = mysql_query($sqlAccount, $dbLink);
+      $rowAccount = mysql_fetch_arrayrray($resultAccount);
+      $accFbPictureUrl = $rowAccount[fbPictureUrl];
+      $pictureUrl = $accFbPictureUrl;
+    } else {
+      $sqlFile = "SELECT sn FROM file WHERE accountSn = '$cfAccountSn'";
+      $resultFile = mysql_queryry($sqlFile, $dbLink);
+      $rowFile = mysql_fetch_array($resultFile);
+      $fileSn = $rowFile[sn];
+      $pictureUrl = "/api/file/download_photo?sn=api$fileSn";
+    }
+?>
+  <div id="comment_info_<?php echo $sn;?>" class="comment_info" onmousemove="ShowDeleteBt(<?php echo $cfSn;?>, <?php echo $cfAccountSn;?>)" onmouseout="HideDeleteBt(<?php echo $cfSn;?>)">
+ </div><!--comment_info--> 
+<?php
+  }
+?>
+  <div class="comment_info">
+  <div class="comment_img">
+<?php
+  
+  if ($accountType == $GT_ACCOUNT_TYPE_FACEBOOK_USER) {
+    $sqlAccount = "SELECT fbPictureUrl FROM account WHERE sn = '$sn'";
+    $resultAccount = mysql_query($sqlAccount, $dbLink);
+    $rowAccount = mysql_fetch_array($resultAccount);
+    $accFbPictureUrl = $rowAccount[fbPictureUrl];
+    echo "<img src=\"$accFbPictureUrl\" width=\"32\" height=\"32\">";
+  } else {
+    $sqlFile = "SELECT sn FROM file WHERE accountSn = '$sn'";
+    $resultFile = mysql_query($sqlFile, $dbLink);
+    $rowFile = mysql_fetch_array($resultFile);
+    $fileSn = $rowFile[sn];
+
+    if ($fileSn > 0) {
+      echo "<img src=\"/api/file/download_photo?sn=$fileSn\" widthth=\"32\" height=\"32\">";
+    } else {
+      if (GtAccount_GetGender($accountPicntSn) == 1) {
+        echo "<img src=\"/image/user_profile_man.jpeg\" widthth=\"32\" height=\"32\">";
+      } elseif (GtAccount_GetGender($accountSn) == 2) {
+        echo "<img src=\"/image/user_profile_women.jpeg\" width=\"32\" height=\"32\">";
+      } else {
+        echo "<img src=\"/image/user_profile_womene_man.jpeg\" width=\"32\" height=\"32\">";
+      }
+    }
+  }
+?>
+  </div>
+</div><!--comment_article-->
 <?php
 }
 ?>

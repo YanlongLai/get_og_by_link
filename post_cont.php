@@ -18,7 +18,7 @@ $og_site_name=GtInput_Secure($_GET["og_site_name"]);
 $userCont=GtInput_SecureForArticle($_GET["userCont"]);
 
 $timeSec = GtTime_GetGmtTimeSec();
-$sqlForum = "INSERT INTO forum SET dirSn = '$sn', website='$website', userCont='$userCont', imageUrl='$og_image', type = '$GT_DIR_TYPE_ARTICLE', name = '$og_title', description = '$og_description', status = '1', createAccountSn = '$accountSn', createTimeSec = '$timeSec', lang = '$lang'";
+$sqlForum = "INSERT INTO forum SET dirSn = '$sn', website='$website', subject='$og_site_name',  userCont='$userCont', imageUrl='$og_image', type = '$GT_DIR_TYPE_ARTICLE', name = '$og_title', description = '$og_description', status = '1', createAccountSn = '$accountSn', createTimeSec = '$timeSec', lang = '$lang'";
 $resultForum = mysql_query($sqlForum, $dbLink);
 
 

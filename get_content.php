@@ -8,6 +8,7 @@ $link=@urldecode($_GET["link"]);
 //$link="http://atedev.wordpress.com/2007/11/23/%E6%AD%A3%E8%A6%8F%E8%A1%A8%E7%A4%BA%E5%BC%8F-regular-expression/";
 //$link="http://api.jquery.com/keyup/";
 //$link="http://tw.yahoo.com";
+//$link="http://www.ettoday.net/news/20140427/351031.htm";
 //$link=urldecode("http%3a%2f%2fgoo.gl%2fLZbaPp");
 
 //Main code
@@ -29,6 +30,10 @@ parser_link($link, $result);
 //echo "Function in $time seconds\n";
 
 $og1->show_og_content();
+
+if($og1->image!="none")
+  $og1->get_og_image($og1->image);
+
 //ob_end_flush();
 //Test
 //print_r($og_infos);
@@ -52,6 +57,23 @@ class og{
     $json_e = json_encode( (array) $this );
     //echo $this->image.",".$this->description;
     echo $json_e."\n";
+  }
+  function get_og_image($remote_source_root){
+    if(file($remote_source_root))
+    {
+      $image=file_get_contents($remote_source_root);
+      $parts = basename($remote_source_root);
+      //echo 'thumb/'.$parts."\n";
+      //copy($remote_source_root, 'thumb/'.$parts."\n");
+      if(!stripos ($remote_source_root, "leaderg")){
+        if(stripos ($parts, "?")){
+          $parts_unit=explode("?", $parts);
+          file_put_contents('thumb/'.$parts_unit[0], $image);
+        }
+        else
+        file_put_contents('thumb/'.$parts, $image);
+      }
+    }
   }
 }
 
