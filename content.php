@@ -13,7 +13,23 @@ border-left-color: rgb(223, 224, 228);border-left-style: solid;border-left-width
 <div class='article' style="margin-bottom: 10px; width: 400px; height: 112px; text-align: left; background-color: #fff; float: left;padding: 0px 20px 0px 12px;border: 1px solid;border-top-color: rgb(229, 230, 233);border-top-style: solid;border-top-width: 1px;border-right-color: rgb(223, 224, 228);border-right-style: solid;border-right-width: 1px;border-bottom-color: rgb(208, 209, 213);border-bottom-style: solid;border-bottom-width: 1px;border-left-color: rgb(223, 224, 228);border-left-style: solid;border-left-width: 1px;border-color: #e5e6e9 #dfe0e4 #d0d1d5; font-family: Georgia, 'lucida grande',tahoma,verdana,arial,sans-serif;line-height: 16px;font-size: 12px;color: #141823;">
 <div class=account style="font-weight: bold; line-height: 25px;"><?php echo $displayname;?>:
 <a href="javascript:Delete_Forum(<?php echo $forumSn;?>)" id='forumDeleteBt_<?php echo $forumSn;?>' style="display:none;"><img style="float: right;" src="/image/close.png"></a></div>
-<?php echo $userCont;?>
+<?php 
+  $reg_exUrl = "/(http|https|ftp|ftps)\:\/\/[a-zA-Z0-9\-\.]+\.[a-zA-Z]{2,3}(\/\S*)?/";
+  if(preg_match($reg_exUrl, $userCont, $url)) {
+    // make the urls hyper links
+    echo preg_replace($reg_exUrl, '<a href="'.$url[0].'" rel="_blank">'.$url[0].'</a>', $userCont);
+
+  } else {
+    $reg_exUrl = "/(^|[^\/])([a-zA-Z0-9\-\_]+\.[\S]+(\b|$))/";
+    // if no urls in the text just return the text
+    if(preg_match($reg_exUrl, $userCont, $url)){
+    echo preg_replace($reg_exUrl, '<a href="http://'.$url[0].'" rel="_blank">'.$url[0].'</a>', $userCont);
+    }
+    else
+    echo $userCont;
+
+  }
+?>
 </div>
 <a style="text-decoration:none;" target="_blank" href="<?php echo $website;?>">
 <?php
