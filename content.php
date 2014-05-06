@@ -4,14 +4,12 @@ $image_count=0;
 function userContent($displayname, $userCont, $imageUrl, $forumName, $desc, $subject, $accountPic, $website, $forumSn, $createAccountSn){
   global $image_count;
 ?>
-  <div id=forum_<?php echo $forumSn;?> onmousemove='ShowDeleteForum(<?php echo $forumSn;?>,<?php echo $createAccountSn;?>)' onmouseout='HideDeleteForum(<?php echo $forumSn;?>)' class='wrap' style="margin: 10px 10px 0 20px; background-color:#FFF; width: 548px; padding: 20px 20px; border-bottom: 0; border-top-left-radius: 5px; border-top-right-radius: 5px; border-bottom-left-radius: 5px; border-bottom-right-radius: 5px;
   <div id=forum_<?php echo $forumSn;?> onmousemove='ShowDeleteForum(<?php echo $forumSn;?>,<?php echo $createAccountSn;?>)' onmouseout='HideDeleteForum(<?php echo $forumSn;?>)' class='wrap' style="margin: 10px 10px 0 20px; background-color:#FFF; width: 598px; padding: 20px 20px; border-bottom: 0; border-top-left-radius: 5px; border-top-right-radius: 5px; border-bottom-left-radius: 5px; border-bottom-right-radius: 5px;
 border: 1px solid;border-top-color: rgb(229, 230, 233);border-top-style: solid;border-top-width: 1px;border-right-color: rgb(223, 224, 228);border-right-style: solid;border-right-width: 1px;border-bottom-color: rgb(208, 209, 213);border-bottom-style: solid;border-bottom-width: 1px;
 border-left-color: rgb(223, 224, 228);border-left-style: solid;border-left-width: 1px;border-color: #e5e6e9 #dfe0e4 #d0d1d5; min-height: 110px;">
 <div class=account_image style="width: 114px; float: left; height: 114px; text-align: left; font-size: 15px; font-weight: bold;">
 <img style="width: 114px;height: 114px;" id=account_img src="/api/file/download_photo.php?sn=<?php echo $accountPic;?>">
 </div>
-<div class='article' style="margin-bottom: 10px; width: 400px; height: 112px; text-align: left; background-color: #fff; float: left;padding: 0px 20px 0px 12px;border: 1px solid;border-top-color: rgb(229, 230, 233);border-top-style: solid;border-top-width: 1px;border-right-color: rgb(223, 224, 228);border-right-style: solid;border-right-width: 1px;border-bottom-color: rgb(208, 209, 213);border-bottom-style: solid;border-bottom-width: 1px;border-left-color: rgb(223, 224, 228);border-left-style: solid;border-left-width: 1px;border-color: #e5e6e9 #dfe0e4 #d0d1d5; font-family: Georgia, 'lucida grande',tahoma,verdana,arial,sans-serif;line-height: 16px;font-size: 12px;color: #141823;">
 <div class='article' style="margin-bottom: 10px; width: 450px; height: 112px; text-align: left; background-color: #fff; float: left;padding: 0px 20px 0px 12px;border: 1px solid;border-top-color: rgb(229, 230, 233);border-top-style: solid;border-top-width: 1px;border-right-color: rgb(223, 224, 228);border-right-style: solid;border-right-width: 1px;border-bottom-color: rgb(208, 209, 213);border-bottom-style: solid;border-bottom-width: 1px;border-left-color: rgb(223, 224, 228);border-left-style: solid;border-left-width: 1px;border-color: #e5e6e9 #dfe0e4 #d0d1d5; font-family: Georgia, 'lucida grande',tahoma,verdana,arial,sans-serif;line-height: 16px;font-size: 12px;color: #141823;">
 <div class=account style="font-weight: bold; line-height: 25px;"><?php echo $displayname;?>:
 <a href="javascript:Delete_Forum(<?php echo $forumSn;?>)" id='forumDeleteBt_<?php echo $forumSn;?>' style="display:none;"><img style="float: right;" src="/image/close.png"></a></div>
@@ -19,13 +17,13 @@ border-left-color: rgb(223, 224, 228);border-left-style: solid;border-left-width
   $reg_exUrl = "/(http|https|ftp|ftps)\:\/\/[a-zA-Z0-9\-\.]+\.[a-zA-Z]{2,3}(\/\S*)?/";
   if(preg_match($reg_exUrl, $userCont, $url)) {
     // make the urls hyper links
-    echo preg_replace($reg_exUrl, '<a href="'.$url[0].'" rel="_blank">'.$url[0].'</a>', $userCont);
+    echo preg_replace($reg_exUrl, '<a href="'.$url[0].'" target="_blank">'.$url[0].'</a>', $userCont);
 
   } else {
     $reg_exUrl = "/(^|[^\/])([a-zA-Z0-9\-\_]+\.[\S]+(\b|$))/";
     // if no urls in the text just return the text
     if(preg_match($reg_exUrl, $userCont, $url)){
-    echo preg_replace($reg_exUrl, '<a href="http://'.$url[0].'" rel="_blank">'.$url[0].'</a>', $userCont);
+    echo preg_replace($reg_exUrl, '<a href="http://'.$url[0].'" target="_blank">'.$url[0].'</a>', $userCont);
     }
     else
     echo $userCont;
@@ -35,28 +33,26 @@ border-left-color: rgb(223, 224, 228);border-left-style: solid;border-left-width
 </div>
 <a style="text-decoration:none;" target="_blank" href="<?php echo $website;?>">
 <?php
-  if($imageUrl!=NULL){
+  if($imageUrl!=NULL && $imageUrl!="none"){
   $parts = basename($imageUrl);
   if(file("thumb/".$parts)){
-  echo '<div class="top" style=" background-color: #FFF;"><img id="img_'.$image_count.'" width="548px" src="thumb/'.$parts.'"></div>';
-  //echo '<script type="text/javascript">$("#img_'.$image_count.'").attr("src","'.$imageUrl.'");</script>';
+  echo '<div class="top" style=" background-color: #FFF;"><img id="img_'.$image_count.'" width="598px" src="thumb/'.$parts.'"></div>';
   }
   else{
-  echo '<div class="top" style=" background-color: #FFF;"><img id="img_'.$image_count.'" width="548px" src="'.$imageUrl.'"></div>';
-  //echo '<script type="text/javascript">$("#img_'.$image_count.'").attr("src","'.$imageUrl.'");</script>';
+  echo '<div class="top" style=" background-color: #FFF;"><img id="img_'.$image_count.'" width="598px" src="'.$imageUrl.'"></div>';
   }
   $image_count++;
 }
 ?>
 <div class='bottom' style="background-color: #FFF; ">
 <div class="title" style="font-family: Georgia, 'lucida grande',tahoma,verdana,arial,sans-serif;font-size: 18px;font-weight: 500;line-height: 22px;margin-bottom: 4px;max-height: 44px;overflow: hidden;word-wrap: break-word;">
-<?php echo $forumName;?>
+<?php if($forumName!=NULL && $forumName!="none") echo $forumName;?>
 </div>
 <div class="descriptipn" style=" font-family: Georgia, 'lucida grande',tahoma,verdana,arial,sans-serif;line-height: 16px;font-size: 12px;color: #141823; margin-bottom: 5px;">
-<?php echo $desc;?>
+<?php if($desc!=NULL && $desc!="none") echo $desc;?>
 </div>
 <div class="site_name" style="color: #adb2bb;font-size: 12px;">
-<?php echo $subject;?>
+<?php if($subject!=NULL && $subject!="none")echo $subject;?>
 </div>
 </div></a>
 </div>

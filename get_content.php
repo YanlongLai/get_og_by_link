@@ -10,6 +10,8 @@ $link=@urldecode($_GET["link"]);
 //$link="http://tw.yahoo.com";
 //$link="http://www.ettoday.net/news/20140427/351031.htm";
 //$link=urldecode("http%3a%2f%2fgoo.gl%2fLZbaPp");
+//$link="https://www.facebook.com/robotclubtw";
+//$link="http://tw-leaderg.leadergstaging.com/forum/index?sn=1093";
 
 //Main code
 $og1=new og;
@@ -101,7 +103,13 @@ function parser_link($link, $result){
   global $og_infos;
   global $og_imgs;
   $result=file_get_contents($link);
+  //$result=html_entity_decode($result, ENT_XML1, 'UTF-8');
+  //$result=html_entity_decode(file_get_contents($link), ENT_XML1, 'UTF-8');
+  //$result=html_entity_decode(file_get_contents($link),ENT_QUOTES,"ISO-8859-1");
+  //$result= preg_replace('/&#x([a-f0-9]+);/mei',"chr(0x\\1)",$result);
+  //$result= utf8_encode ($result);
   //$result= utf8_decode ($result);
+  //$result= preg_replace('/&#(\d+);/me',"chr(\\1)", $result);
   //$result= preg_replace('/;&#x/','\u', $result);
   preg_match_all('#<meta (property|name)=[\'"]([^>]*)[\'"][ |\n]content=[\'"]([^>]*)[\'"][^"]*>#', $result, $og_infos, PREG_SET_ORDER);
   //preg_match_all('#<meta (property|name)=[\'"]([^>]*)[\'"][ |\n]content=[\'"]([^>]*)[\'"][^"]*>#', $result, $og_infos, PREG_SET_ORDER);
@@ -113,30 +121,30 @@ function parser_link($link, $result){
     if (strpos ($og_info[2], "og:image")!==false)
       $og1->image=$og_info[3];
     if (strpos ($og_info[2], "og:title")!==false)
-      $og1->title=$og_info[3];
       $og1->title=html_entity_decode($og_info[3], ENT_QUOTES, 'UTF-8');
     else if (stripos ($og_info[2], "author")!==false)
-      $og1->title=$og_info[3];
+      $og1->title=html_entity_decode($og_info[3], ENT_QUOTES, 'UTF-8');
     if (strpos ($og_info[2], "og:site_name")!==false)
-      $og1->site_name=$og_info[3];
+      $og1->site_name=html_entity_decode($og_info[3], ENT_QUOTES, 'UTF-8');
     else if(strpos ($og_info[2], "generator")!==false)
-      $og1->site_name=$og_info[3];
+      $og1->site_name=html_entity_decode($og_info[3], ENT_QUOTES, 'UTF-8');
     if (strpos ($og_info[2], "og:description")!==false)
-      $og1->description=$og_info[3];
+      $og1->description=html_entity_decode($og_info[3], ENT_QUOTES, 'UTF-8');
 
   //Fuzzy search
     if (stripos ($og_info[2], "image")!==false && $og1->image=="none")
       $og1->image=$og_info[3];
     if (stripos ($og_info[2], "title")!==false && $og1->title=="none")
-      $og1->title=$og_info[3];
+      $og1->title=html_entity_decode($og_info[3], ENT_QUOTES, 'UTF-8');
+      //$og1->title=$og_info[3];
     else if (stripos ($og_info[2], "author")!==false && $og1->title=="none")
-      $og1->title=$og_info[3];
+      $og1->title=html_entity_decode($og_info[3], ENT_QUOTES, 'UTF-8');
     if (stripos ($og_info[2], "site_name")!==false && $og1->site_name=="none")
-      $og1->site_name=$og_info[3];
+      $og1->site_name=html_entity_decode($og_info[3], ENT_QUOTES, 'UTF-8');
     else if(stripos ($og_info[2], "generator")!==false && $og1->site_name=="none")
-      $og1->site_name=$og_info[3];
+      $og1->site_name=html_entity_decode($og_info[3], ENT_QUOTES, 'UTF-8');
     if (stripos ($og_info[2], "description")!==false && $og1->description=="none")
-      $og1->description=$og_info[3];
+      $og1->description=html_entity_decode($og_info[3], ENT_QUOTES, 'UTF-8');
     //print($og_info[3]."\n");
     //print_r($og_unit);
   }
