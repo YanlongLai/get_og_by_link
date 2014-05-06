@@ -101,6 +101,8 @@ function parser_link($link, $result){
   global $og_infos;
   global $og_imgs;
   $result=file_get_contents($link);
+  //$result= utf8_decode ($result);
+  //$result= preg_replace('/;&#x/','\u', $result);
   preg_match_all('#<meta (property|name)=[\'"]([^>]*)[\'"][ |\n]content=[\'"]([^>]*)[\'"][^"]*>#', $result, $og_infos, PREG_SET_ORDER);
   //preg_match_all('#<meta (property|name)=[\'"]([^>]*)[\'"][ |\n]content=[\'"]([^>]*)[\'"][^"]*>#', $result, $og_infos, PREG_SET_ORDER);
   //echo $link_page;
@@ -112,6 +114,7 @@ function parser_link($link, $result){
       $og1->image=$og_info[3];
     if (strpos ($og_info[2], "og:title")!==false)
       $og1->title=$og_info[3];
+      $og1->title=html_entity_decode($og_info[3], ENT_QUOTES, 'UTF-8');
     else if (stripos ($og_info[2], "author")!==false)
       $og1->title=$og_info[3];
     if (strpos ($og_info[2], "og:site_name")!==false)
