@@ -17,16 +17,18 @@ border-left-color: rgb(223, 224, 228);border-left-style: solid;border-left-width
   $reg_exUrl = "/(http|https|ftp|ftps)\:\/\/[a-zA-Z0-9\-\.]+\.[a-zA-Z]{2,3}(\/\S*)?/";
   if(preg_match($reg_exUrl, $userCont, $url)) {
     // make the urls hyper links
-    echo preg_replace($reg_exUrl, '<a href="'.$url[0].'" target="_blank">'.$url[0].'</a>', $userCont);
+    $userCont_a = preg_replace($reg_exUrl, '<a href="'.$url[0].'" target="_blank">'.$url[0].'</a>', $userCont);
+    echo nl2br($userCont_a);
 
   } else {
     $reg_exUrl = "/(^|[^\/])([a-zA-Z0-9\-\_]+\.[\S]+(\b|$))/";
     // if no urls in the text just return the text
     if(preg_match($reg_exUrl, $userCont, $url)){
-    echo preg_replace($reg_exUrl, '<a href="http://'.$url[0].'" target="_blank">'.$url[0].'</a>', $userCont);
+      $userCont_a =  preg_replace($reg_exUrl, '<a href="http://'.$url[0].'" target="_blank">'.$url[0].'</a>', nl2br($userCont));
+      echo nl2br($userCont_a);
     }
     else
-    echo $userCont;
+    echo nl2br($userCont);
 
   }
 ?>
