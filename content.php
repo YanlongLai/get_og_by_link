@@ -1,8 +1,56 @@
 <?php
 $image_count=0;
 //include(getenv("DOCUMENT_ROOT")."/includePUX4QF93/global.php");
+function formatUrlsInText($text){
+  //$reg_exUrl = "/(http|https|ftp|ftps)\:\/\/[a-zA-Z0-9\-\.]+\.[a-zA-Z]{2,3}(\/\S*)?/";
+  $reg_exUrl = "(((f|ht){1}tp://)[-a-zA-Z0-9@:%_\+.~#?&//=]+)";
+  if(preg_match_all($reg_exUrl, $text, $matches)) {
+    preg_match_all($reg_exUrl, $text, $matches);
+    $usedPatterns = array();
+    foreach($matches[0] as $pattern){
+      if(!array_key_exists($pattern, $usedPatterns)){
+        $usedPatterns[$pattern]=true;
+        //$text = str_replace($pattern, "<a class=userContent href='".$pattern."' target='_blank'>".$pattern."</a>", $text);
+        $text = eregi_replace($pattern, "<a class=userContent href='".$pattern."' target='_blank'>".$pattern."</a>", $text);
+      }
+    }
+    echo nl2br($text);
+    //return $text;
+  }
+  else{
+    $reg_exUrl = "/(^|[^\/])([a-zA-Z0-9\-\_]+\.[\S]+(\b|$))/";
+    preg_match_all($reg_exUrl, $text, $matches);
+    $usedPatterns = array();
+    foreach($matches[0] as $pattern){
+      if(!array_key_exists($pattern, $usedPatterns)){
+        $usedPatterns[$pattern]=true;
+        $text = str_replace($pattern, "<a class=userContent href='http:\/\/".$pattern."' target=_blank>".$pattern."</a>", $text);
+      }
+    }
+    echo nl2br($text);
+    //return $text;
+  }
+}
+//
 function userContent($displayname, $userCont, $imageUrl, $forumName, $desc, $subject, $accountPic, $website, $forumSn, $createAccountSn){
   global $image_count;
+  //if()
+  //$pos = strpos($userCont, PHP_EOL, 2);
+  $enter = count( explode(PHP_EOL, $userCont) );
+  $enter_limit = 1;
+  if($enter > 3){
+    $usrCont_a = explode(PHP_EOL,$userCont);
+    foreach($usrCont_a as $key){
+      if($enter_limit<=3)
+        $usrCont_limit = $usrCont_limit.$key.PHP_EOL;
+        $enter_limit++;
+    }
+    $userCont = $usrCont_limit;
+  }
+  if(strlen($userCont) > 191 || $enter > 3)
+    $userCont = substr($userCont,0,191)."...";
+  else
+    $userCont = $userCont." ";
 ?>
   <div id=forum_<?php echo $forumSn;?> onmousemove='ShowDeleteForum(<?php echo $forumSn;?>,<?php echo $createAccountSn;?>)' onmouseout='HideDeleteForum(<?php echo $forumSn;?>)' class='wrap' style="margin: 10px 10px 0 20px; background-color:#FFF; width: 598px; padding: 20px 20px; border-bottom: 0; border-top-left-radius: 5px; border-top-right-radius: 5px; border-bottom-left-radius: 5px; border-bottom-right-radius: 5px;
 border: 1px solid;border-top-color: rgb(229, 230, 233);border-top-style: solid;border-top-width: 1px;border-right-color: rgb(223, 224, 228);border-right-style: solid;border-right-width: 1px;border-bottom-color: rgb(208, 209, 213);border-bottom-style: solid;border-bottom-width: 1px;
@@ -10,30 +58,41 @@ border-left-color: rgb(223, 224, 228);border-left-style: solid;border-left-width
 <div class=account_image style="width: 114px; float: left; height: 114px; text-align: left; font-size: 15px; font-weight: bold;">
 <img style="width: 114px;height: 114px;" id=account_img src="/api/file/download_photo.php?sn=<?php echo $accountPic;?>">
 </div>
-<div class='article' style="margin-bottom: 10px; width: 450px; height: 112px; text-align: left; background-color: #fff; float: left;padding: 0px 20px 0px 12px;border: 1px solid;border-top-color: rgb(229, 230, 233);border-top-style: solid;border-top-width: 1px;border-right-color: rgb(223, 224, 228);border-right-style: solid;border-right-width: 1px;border-bottom-color: rgb(208, 209, 213);border-bottom-style: solid;border-bottom-width: 1px;border-left-color: rgb(223, 224, 228);border-left-style: solid;border-left-width: 1px;border-color: #e5e6e9 #dfe0e4 #d0d1d5; font-family: Georgia, 'lucida grande',tahoma,verdana,arial,sans-serif;line-height: 16px;font-size: 12px;color: #141823;">
-<div class=account style="font-weight: bold; line-height: 25px;"><?php echo $displayname;?>:
-<a href="javascript:Delete_Forum(<?php echo $forumSn;?>)" id='forumDeleteBt_<?php echo $forumSn;?>' style="display:none;"><img style="float: right;" src="/image/close.png"></a></div>
-<?php 
-  $reg_exUrl = "/(http|https|ftp|ftps)\:\/\/[a-zA-Z0-9\-\.]+\.[a-zA-Z]{2,3}(\/\S*)?/";
-  if(preg_match($reg_exUrl, $userCont, $url)) {
+<div class="delete_forum"><a href="javascript:Delete_Forum(<?php echo $forumSn;?>)" id='forumDeleteBt_<?php echo $forumSn;?>' style="position: absolute; margin-left: 460px;display: none;"><img style="float: right;" src="/image/close.png"></a></div>
+<div class="account" style="/* font-weight: bold; */ color: #444; line-height: 20px;position: absolute;/* margin-top: 95px; *//* text-align: center; */margin-left: 128px;margin-top: 6px;font-size: 14px;"><a href="/account/info?sn=<?php echo $createAccountSn;?>" target="_blank"><?php echo $displayname;?></a>:</div>
+<div class="article" style="margin-bottom: 10px; width: 450px; height: 83px; text-align: left; background-color: #fff; float: left;padding: 30px 20px 0px 12px;border: 1px solid;border-top-color: rgb(229, 230, 233);border-top-style: solid;border-top-width: 1px;border-right-color: rgb(223, 224, 228);border-right-style: solid;border-right-width: 1px;border-bottom-color: rgb(208, 209, 213);border-bottom-style: solid;border-bottom-width: 1px;border-left-color: rgb(223, 224, 228);border-left-style: solid;border-left-width: 1px;border-color: #e5e6e9 #dfe0e4 #d0d1d5; font-family: Georgia, 'lucida grande',tahoma,verdana,arial,sans-serif;line-height: 16px;font-size: 12px;color: #141823;">
+<?php
+  //echo nl2br(formatUrlsInText($userCont));
+  echo nl2br(makeClickableLinks($userCont));
+  /*
+  $reg_exUrl = "/(http|https|ftp|ftps)\:\/\/[a-zA-Z0-9\-\.]+\.[a-zA-Z]{2,3}(\/\S*)?/g";
+  if(preg_match_all($reg_exUrl, $userCont, $url)) {
     // make the urls hyper links
-    $userCont_a = preg_replace($reg_exUrl, '<a href="'.$url[0].'" target="_blank">'.$url[0].'</a>', $userCont);
+    //if(strlen($userCont) > 56)
+      //$userCont_a = preg_replace($reg_exUrl, '<a class=userContent href="'.$url[0].'" target="_blank">'.substr($url[0],0,56).'...</a>', $userCont);
+    //else
+      $userCont_a = preg_replace($reg_exUrl, '<a class=userContent href="'.$url[0].'" target="_blank">'.$url[0].'</a>', $userCont);
     echo nl2br($userCont_a);
 
   } else {
     $reg_exUrl = "/(^|[^\/])([a-zA-Z0-9\-\_]+\.[\S]+(\b|$))/";
     // if no urls in the text just return the text
     if(preg_match($reg_exUrl, $userCont, $url)){
-      $userCont_a =  preg_replace($reg_exUrl, '<a href="http://'.$url[0].'" target="_blank">'.$url[0].'</a>', nl2br($userCont));
+    //if(strlen($userCont) > 56)
+      //$userCont_a =  preg_replace($reg_exUrl, '<a class=userContent href="http://'.$url[0].'" target="_blank">'.substr($url[0],0,56).'...</a>', $userCont);
+    //else
+      $userCont_a =  preg_replace($reg_exUrl, '<a class=userContent href="http://'.$url[0].'" target="_blank">'.$url[0].'</a>', $userCont);
       echo nl2br($userCont_a);
     }
     else
     echo nl2br($userCont);
 
   }
+   */
 ?>
 </div>
-<a style="text-decoration:none;" target="_blank" href="<?php echo $website;?>">
+<div class="more" style="/* font-weight: bold; */ color: #444; line-height: 20px;position: absolute;/* margin-top: 95px; *//* text-align: center; */margin-left: 520px;margin-top: 88px;font-size: 12px;"><a href="/forum/thread?sn=<?php echo $forumSn;?>" target="_blank">See More</a></div>
+<a style="text-decoration:none;" target="_blank" href="<?php echo urldecode(urldecode($website));?>">
 <?php
   if($imageUrl!=NULL && $imageUrl!="none"){
   $parts = basename($imageUrl);

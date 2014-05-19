@@ -1,11 +1,8 @@
 <?php
-include(getenv("DOCUMENT_ROOT")."/includePUX4QF93/global.php");
 //fixed link
 //GET link
 $link=@urldecode($_GET["link"]);
 
-$accountSn = GtAccount_GetSn();
-$timeSec = GtTime_GetGmtTimeSec();
 
 //Test link list
 //$link="http://atedev.wordpress.com/2007/11/23/%E6%AD%A3%E8%A6%8F%E8%A1%A8%E7%A4%BA%E5%BC%8F-regular-expression/";
@@ -76,41 +73,15 @@ class og{
     {
       $image=file_get_contents($remote_source_root);
       $parts = basename($remote_source_root);
-
-      $serverFileName = GtTime_GetGmtDateTimeMicro() . "-" . $accountSn . ".enc";
-      $encType = 0;
-      $encKey = hash("sha256", rand().rand().rand().rand(), true);
-      $encKeySql = mysql_real_escape_string($encKey);
       //echo 'thumb/'.$parts."\n";
       //copy($remote_source_root, 'thumb/'.$parts."\n");
-
-      //sql
-      //
-      //Find Sn image
-      $sqlFile = "SELECT sn, encName, type FROM file WHERE forumSn = '$sn'";
-      $resultFile = mysql_query($sqlFile, $dbLink);
-      $rowFile = mysql_fetch_array($resultFile);
-      $fileSn = $rowFile[sn];
-      $fileEncName = $rowFile[encName];
-      //insert new image
-      if ($row == FALSE) {
-        //insert new image to file table
-        $sql = "INSERT INTO file SET type = '4', name = '".mysql_real_escape_string($parts)."', nameExt = '$nameExt', dirSn = '$sn', rank = '$rank', createTimeSec = '$timeSec', createAccountSn = '$accountSn', encType = '$encType', encKey = '$encKey', encName = '$serverFileName', status = '1', width = '$imageSrcWidth', height = '$imageSrcHeight'";
-        //insert new image to uploader
-        if(!stripos ($remote_source_root, "leaderg")){
-        /*
+      if(!stripos ($remote_source_root, "leaderg")){
         if(stripos ($parts, "?")){
-          $parts_unit=explode("?", $serverFileName);
-          file_put_contents($serverUploadDir.'/'.$parts_unit[0], $image);
+          $parts_unit=explode("?", $parts);
+          file_put_contents('thumb/'.$parts_unit[0], $image);
         }
         else
-         */
-          file_put_contents($serverUploadDir.'/'.$serverFileName, $image);
-        }
-        //insert new image to file table
-      }
-      //use old image
-      else{
+        file_put_contents('thumb/'.$parts, $image);
       }
 
     }
