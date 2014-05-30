@@ -1,10 +1,13 @@
 <?php
+include(getenv("DOCUMENT_ROOT")."/includePUX4QF93/global.php");
 //fixed link
 //GET link
 $link=@urldecode($_GET["link"]);
 
+$accountSn = GtAccount_GetSn();
+$timeSec = GtTime_GetGmtTimeSec();
 
-//Test link list--------------------------
+//Test link list
 //$link="http://atedev.wordpress.com/2007/11/23/%E6%AD%A3%E8%A6%8F%E8%A1%A8%E7%A4%BA%E5%BC%8F-regular-expression/";
 //$link="http://api.jquery.com/keyup/";
 //$link="http://tw.yahoo.com";
@@ -18,13 +21,7 @@ $link=@urldecode($_GET["link"]);
 //$link="https://tw.news.yahoo.com/%E7%82%BA8%E5%8D%83%E5%85%83%E7%94%B7%E5%8B%92%E6%96%83%E5%A5%B3%E5%90%8C%E4%BA%8B-%E7%88%B6%E8%A6%AA%E7%97%9B%E6%89%B9-%E5%AF%A6%E5%9C%A8%E5%A4%AA%E5%8F%AF%E6%83%A1%E4%BA%86-080133415.html";
 //$link="http://udn.com/NEWS/MAINLAND/MAI1/";
 
-//Main code--------------------------------
-//1. build class
-//2. test link & get og info.
-//3. show og
-//4. save og image
-//5. save og image to uploader in uploader.php
-//
+//Main code
 $og1=new og;
 //ob_start();
 
@@ -44,16 +41,13 @@ parser_link($link, $result);
 
 $og1->show_og_content();
 
-//if($og1->image!="none")
-  //$og1->get_og_image($og1->image);
-  //$og1->get_og_imageToUploader($og1->image);
+if($og1->image!="none")
+  $og1->get_og_image($og1->image);
 
 //ob_end_flush();
 //Test
 //print_r($og_infos);
 //print_r($og_imgs);
-
-//Main code end----------------------------
 
 //build class og by Yanlong
 class og{
@@ -75,28 +69,68 @@ class og{
     echo $json_e."\n";
   }
   function get_og_image($remote_source_root){
+		global $serverUploadDir;
+		global $accountSn;
+	
     if(@file($remote_source_root))
     {
       $image=file_get_contents($remote_source_root);
       $parts = basename($remote_source_root);
+
+      $serverFileName = GtTime_GetGmtDateTimeMicro() . "-" . $accountSn . ".enc";
+      $encType = 0;
+      $encKey = hash("sha256", rand().rand().rand().rand(), true);
+      $encKeySql = mysql_real_escape_string($encKey);
+      
+      $fileNames = explode(".", $parts);
+      $fileExtension = $fileNames[count($fileNames)-1];
+      if(strcmp("png", strtolower($fileExtension)) == 0)
+        $nameExt = "png";
+      else if(strcmp("jpg", strtolower($fileExtension)) == 0)
+        $nameExt = "jpg";
+      else if(strcmp("jpeg", strtolower($fileExtension)) == 0)
+        $nameExtameExt = "jpeg";
+      else if(strcmp("gif", strtolower($fileExtension)) == 0)
+        $nameExt = "gif";
+      else if(strcmp("mp4", strtolower($fileExtension))   == 0) 
+        $nameExt = "mp4";
+      else
+        $nameExt = $fileExtension;
+
       //echo 'thumb/'.$parts."\n";
       //copy($remote_source_root, 'thumb/'.$parts."\n");
-      if(!stripos ($remote_source_root, "leaderg")){
+
+      //sql
+      //
+      //Find Sn image
+      $sqlFile = "SELECT sn, encName, type FROM file WHERE forumSn = '$sn'";
+      $resultFile = mysql_query($sqlFile, $dbLink);
+      $rowFile = mysql_fetch_array($resultFile);
+      $fileSn = $rowFile[sn];
+      $fileEncName = $rowFile[encName];
+      //insert new image
+      if ($row == FALSE) {
+        //insert new image to file table
+        $sql = "INSERT INTO file SET type = '4', name = '".mysql_real_escape_string($parts)."', nameExt = '$nameExt', forumSn = '$sn', rank = '0', createTimeSec = '$timeSec', createAccountSn = '$accountSn', encType = '$encType', encKey = '$encKey', encName = '$serverFileName', status = '1', width = '$imageSrcWidth', height = '$imageSrcHeight'";
+        //insert new image to uploader
+        if(!stripos ($remote_source_root, "leaderg")){
+        /*
         if(stripos ($parts, "?")){
-          $parts_unit=explode("?", $parts);
-          file_put_contents('thumb/'.$parts_unit[0], $image);
+          $parts_unit=explode("?", $serverFileName);
+          file_put_contents($serverUploadDir.'/'.$parts_unit[0], $image);
         }
         else
-        file_put_contents('thumb/'.$parts, $image);
+         */
+          file_put_contents($serverUploadDir.'/'.$serverFileName, $image);
+        }
+        //insert new image to file table
+      }
+      //use old image
+      else{
       }
 
     }
   }
-  /*
-  function get_og_imageToUploader($remote_source_root){
-    
-  }
-   */
 }
 
 //Test link or not

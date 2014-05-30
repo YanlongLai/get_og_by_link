@@ -92,7 +92,7 @@ border-left-color: rgb(223, 224, 228);border-left-style: solid;border-left-width
 ?>
 </div>
 <div class="more" style="/* font-weight: bold; */ color: #444; line-height: 20px;position: absolute;/* margin-top: 95px; *//* text-align: center; */margin-left: 520px;margin-top: 88px;font-size: 12px;"><a href="/forum/thread?sn=<?php echo $forumSn;?>" target="_blank">See More</a></div>
-<a style="text-decoration:none;" target="_blank" href="<?php echo urldecode(urldecode($website));?>">
+<a style="text-decoration:none;" target="_blank" href="<?php echo urldecode($website);?>">
 <?php
   if($imageUrl!=NULL && $imageUrl!="none"){
   $parts = basename($imageUrl);

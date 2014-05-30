@@ -4,7 +4,7 @@
 $link=@urldecode($_GET["link"]);
 
 
-//Test link list
+//Test link list--------------------------
 //$link="http://atedev.wordpress.com/2007/11/23/%E6%AD%A3%E8%A6%8F%E8%A1%A8%E7%A4%BA%E5%BC%8F-regular-expression/";
 //$link="http://api.jquery.com/keyup/";
 //$link="http://tw.yahoo.com";
@@ -15,10 +15,16 @@ $link=@urldecode($_GET["link"]);
 //$link="http://share.hothk.com/2014/05/blog-post_9622.html?m=1&_=1400228348899";
 //$link="http://en.wikipedia.org/wiki/Caelum";
 //$link="http://udn.com/NEWS/BREAKINGNEWS/BREAKINGNEWS9/8682091.shtml";
-//$link="https://tw.news.yahoo.com/%E7%82%BA8%E5%8D%83%E5%85%83%E7%94%B7%E5%8B%92%E6%96%83%E5%A5%B3%E5%90%8C%E4%BA%8B-%E7%88%B6%E8%A6%AA%E7%97%9B%E6%89%B9-%E5%AF%A6%E5%9C%A8%E5%A4%AA%E5%8F%AF%E6%83%A1%E4%BA%86-080133415.html";
+$link="https://tw.news.yahoo.com/%E7%82%BA8%E5%8D%83%E5%85%83%E7%94%B7%E5%8B%92%E6%96%83%E5%A5%B3%E5%90%8C%E4%BA%8B-%E7%88%B6%E8%A6%AA%E7%97%9B%E6%89%B9-%E5%AF%A6%E5%9C%A8%E5%A4%AA%E5%8F%AF%E6%83%A1%E4%BA%86-080133415.html";
 //$link="http://udn.com/NEWS/MAINLAND/MAI1/";
 
-//Main code
+//Main code--------------------------------
+//1. build class
+//2. test link & get og info.
+//3. show og
+//4. save og image
+//5. save og image to uploader in uploader.php
+//
 $og1=new og;
 //ob_start();
 
@@ -38,13 +44,16 @@ parser_link($link, $result);
 
 $og1->show_og_content();
 
-if($og1->image!="none")
-  $og1->get_og_image($og1->image);
+//if($og1->image!="none")
+  //$og1->get_og_image($og1->image);
+  //$og1->get_og_imageToUploader($og1->image);
 
 //ob_end_flush();
 //Test
 //print_r($og_infos);
 //print_r($og_imgs);
+
+//Main code end----------------------------
 
 //build class og by Yanlong
 class og{
@@ -66,9 +75,6 @@ class og{
     echo $json_e."\n";
   }
   function get_og_image($remote_source_root){
-		global $serverUploadDir;
-		global $accountSn;
-	
     if(@file($remote_source_root))
     {
       $image=file_get_contents($remote_source_root);
@@ -86,6 +92,11 @@ class og{
 
     }
   }
+  /*
+  function get_og_imageToUploader($remote_source_root){
+    
+  }
+   */
 }
 
 //Test link or not
