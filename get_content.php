@@ -3,11 +3,10 @@
 //GET link
 $link=@urldecode($_GET["link"]);
 
-
 //Test link list--------------------------
 //$link="http://atedev.wordpress.com/2007/11/23/%E6%AD%A3%E8%A6%8F%E8%A1%A8%E7%A4%BA%E5%BC%8F-regular-expression/";
 //$link="http://api.jquery.com/keyup/";
-//$link="http://tw.yahoo.com";
+$link="http://tw.yahoo.com";
 //$link="http://www.ettoday.net/news/20140427/351031.htm";
 //$link=urldecode("http%3a%2f%2fgoo.gl%2fLZbaPp");
 //$link="https://www.facebook.com/robotclubtw";
@@ -19,14 +18,13 @@ $link=@urldecode($_GET["link"]);
 //$link="http://udn.com/NEWS/MAINLAND/MAI1/";
 
 //Main code--------------------------------
-//1. build class
-//2. test link & get og info.
-//3. show og
+//1. Build a new class
+//2. Test link & get og info.
+//3. show og content
 //4. save og image
 //5. save og image to uploader in uploader.php
-//
+
 $og1=new og;
-//ob_start();
 
 //Time test
 //$time_start = microtime(true);
@@ -48,7 +46,6 @@ $og1->show_og_content();
   //$og1->get_og_image($og1->image);
   //$og1->get_og_imageToUploader($og1->image);
 
-//ob_end_flush();
 //Test
 //print_r($og_infos);
 //print_r($og_imgs);
@@ -62,8 +59,15 @@ class og{
   var $site_name;
   var $description;
   //constructor
-  function og()
-  {
+  //PHP 5
+  function __construct(){
+    $this->image = "none";
+    $this->title = "none";
+    $this->site_name = "none";
+    $this->description = "none";
+  }
+  //PHP 4
+  function og(){
     $this->image = "none";
     $this->title = "none";
     $this->site_name = "none";
@@ -71,7 +75,6 @@ class og{
   }
   function show_og_content(){
     $json_e = json_encode( (array) $this );
-    //echo $this->image.",".$this->description;
     echo $json_e."\n";
   }
   function get_og_image($remote_source_root){
@@ -100,49 +103,33 @@ class og{
 }
 
 //Test link or not
-function test_link($url)
-{
+function test_link($url){
   global $result;
   ini_set('user_agent','Mozilla/5.0 (Windows NT 6.2; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/32.0.1667.0 Safari/537.36');
   $dh=@fopen("$url",'r');
-  if($dh!=null)
-  {
-    //link ok
-    //$result = fread($dh,8192);
+  if($dh!=null){
     $result = fread($dh,256);
     return true;
   }
   else
-  {
-    return false;
-  }
+  return false;
 }
 
 function parser_link($link, $result){
   global $og1;
   global $og_infos;
   global $og_imgs;
+ 
   $result=file_get_contents($link);
-  //$result=iconv("big5","UTF-8",$result);
-  //$result=html_entity_decode($result, ENT_XML1, 'UTF-8');
-  //$result=html_entity_decode(file_get_contents($link), ENT_XML1, 'UTF-8');
-  //$result=html_entity_decode(file_get_contents($link),ENT_QUOTES,"ISO-8859-1");
-  //$result= preg_replace('/&#x([a-f0-9]+);/mei',"chr(0x\\1)",$result);
-  //$result= utf8_encode ($result);
-  //$result= utf8_decode ($result);
-  //$result= preg_replace('/&#(\d+);/me',"chr(\\1)", $result);
-  //$result= preg_replace('/;&#x/','\u', $result);
-  //preg_match_all('#<meta (property|name)=[\'"]([^>]*)[\'"][ |\n]content=[\'"]([^>]*)[\'"][^"]*>#', $result, $og_infos, PREG_SET_ORDER);
-  //echo $link_page;
-  //preg_match_all('#<meta property=[\'"]([^>]*)[\'"] content=[\'"]([^>]*)[\'"].>#i', $link_page, $og_infos, PREG_SET_ORDER);
   
-//  First SEARCH //
+//First SEARCH--------------------------------
   
   preg_match_all('#<meta (property|name)=[\'"]([^>]*)[\'"][ |\n]content=[\'"]([^>]*)[\'"][^"]*>#', $result, $og_infos, PREG_SET_ORDER);
   foreach ($og_infos as $og_info){
-  //encode
+  //encode big5->UTF-8
     if(!mb_detect_encoding($og_info[3], 'UTF-8'))
       $og_info[3]=iconv("big5","UTF-8",$og_info[3]);
+    
   //Search
     if (strpos ($og_info[2], "og:image")!==false)
       $og1->image=$og_info[3];
@@ -167,12 +154,14 @@ function parser_link($link, $result){
       $og1->site_name=html_entity_decode($og_info[3], ENT_QUOTES, 'UTF-8');
     if (stripos ($og_info[2], "description")!==false && $og1->description=="none")
       $og1->description=html_entity_decode($og_info[3], ENT_QUOTES, 'UTF-8');
+
+  // First SEARCH LOG //
     //print_r($og_info);
     //print_r($og_unit);
   }
+//First SEARCH End-----------------------------
 
-//  Second SEARCH --- http://share.hothk.com/  //
-
+//Second SEARCH --- http://share.hothk.com/ ---
   preg_match_all('#<meta content=[\'"]([^>]*)[\'"][ ](property|name)=[\'"]([^>]*)[\'"][^>]*>#', $result, $og_infos, PREG_SET_ORDER);
   foreach ($og_infos as $og_info){
   //encode
@@ -210,43 +199,40 @@ function parser_link($link, $result){
     //print_r($og_info);
     //print_r($og_unit);
   }
+//Second SEARCH End --- http://share.hothk.com/ ---
 
-  //   Third SEARCH --- wiki //
-  //
-  //   title
+//Third SEARCH --- wiki ---------------------------
+  //Title
   preg_match_all('#<title>([^<]*)</title>#', $result, $og_infos, PREG_SET_ORDER);
   foreach ($og_infos as $og_info){
-  //encode
+  //Encode
     if(!mb_detect_encoding($og_info[1], 'UTF-8'))
       $og_info[1]=iconv("big5","UTF-8",$og_info[1]);
   //Search
     if($og1->title=="none" || $og1->title==null)
       $og1->title=$og_info[1];
     //print_r($og_info);
-  
   }
-  //   des.
+  //Des.
   preg_match_all('#<p>(.*)</p>#', $result, $og_infos, PREG_SET_ORDER);
   foreach ($og_infos as $og_info){
-  //encode
+  //Encode
     if(!mb_detect_encoding($og_info[1], 'UTF-8'))
       $og_info[1]=iconv("big5","UTF-8",$og_info[1]);
   //Search
     if($og1->description=="none")
       $og1->description=strip_tags($og_info[1]);
     //print_r($og_info);
-  
   }
-
   preg_match_all('#<span dir=[\'"]([^>]*)[\'"][>]([^<]*)</span>#', $result, $og_infos, PREG_SET_ORDER);
   foreach ($og_infos as $og_info){
     if (strpos ($og_info[1], "auto")!==false  && ($og1->title=="none" || $og1->title==null))
       $og1->title=$og_info[2];
     //print_r($og_info);
-  
   }
+//Third SEARCH End--- wiki ---------------------------
 
-  //Find the First image
+//Find First Image -------------------------------
   if($og1->image=="none"){
     if(preg_match_all('#<img[^s]*\ssrc=[\'"]([^\'"]*)[\'"] [^>]*>#', $result, $og_imgs, PREG_SET_ORDER))
       $og1->image=$og_imgs[0][1];
@@ -254,7 +240,9 @@ function parser_link($link, $result){
       $og1->image="none";
     //print_r($og_imgs);
   }
+//Find First Image End ---------------------------
 }
+
 /*
 if (in_array($argv[1], array('-log'))) {
   print_r($og_infos);
