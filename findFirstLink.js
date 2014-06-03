@@ -6,7 +6,7 @@ function findFirstLink(text) {
   //No http... but a link
   if(match==null){
     var exp = /(^|[^\/])([a-zA-Z0-9\-\_]+\.[\S]+(\b|$))/gim;
-    var match = expp.exec(text);
+    var match = exp.exec(text);
   }
   //No link
   if(match==null){

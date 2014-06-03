@@ -96,12 +96,12 @@ border-left-color: rgb(223, 224, 228);border-left-style: solid;border-left-width
 <?php
   if($imageUrl!=NULL && $imageUrl!="none"){
   $parts = basename($imageUrl);
-  if(file("thumb/".$parts)){
-  echo '<div class="top" style=" background-color: #FFF;"><img id="img_'.$image_count.'" width="598px" src="thumb/'.$parts.'"></div>';
-  }
-  else{
+  //if(file("thumb/".$parts)){
+  //echo '<div class="top" style=" background-color: #FFF;"><img id="img_'.$image_count.'" width="598px" src="thumb/'.$parts.'"></div>';
+  //}
+  //else{
   echo '<div class="top" style=" background-color: #FFF;"><img id="img_'.$image_count.'" width="598px" src="'.$imageUrl.'"></div>';
-  }
+  //}
   $image_count++;
 }
 ?>
