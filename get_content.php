@@ -6,7 +6,7 @@ $link=@urldecode($_GET["link"]);
 //Test link list--------------------------
 //$link="http://atedev.wordpress.com/2007/11/23/%E6%AD%A3%E8%A6%8F%E8%A1%A8%E7%A4%BA%E5%BC%8F-regular-expression/";
 //$link="http://api.jquery.com/keyup/";
-$link="http://tw.yahoo.com";
+//$link="http://tw.yahoo.com";
 //$link="http://www.ettoday.net/news/20140427/351031.htm";
 //$link=urldecode("http%3a%2f%2fgoo.gl%2fLZbaPp");
 //$link="https://www.facebook.com/robotclubtw";
@@ -16,6 +16,11 @@ $link="http://tw.yahoo.com";
 //$link="http://udn.com/NEWS/BREAKINGNEWS/BREAKINGNEWS9/8682091.shtml";
 //$link="https://tw.news.yahoo.com/%E7%82%BA8%E5%8D%83%E5%85%83%E7%94%B7%E5%8B%92%E6%96%83%E5%A5%B3%E5%90%8C%E4%BA%8B-%E7%88%B6%E8%A6%AA%E7%97%9B%E6%89%B9-%E5%AF%A6%E5%9C%A8%E5%A4%AA%E5%8F%AF%E6%83%A1%E4%BA%86-080133415.html";
 //$link="http://udn.com/NEWS/MAINLAND/MAI1/";
+//$link="http://www.ctitv.com.tw/news_video_c148v172812.html";
+//$link="http://www.bbc.co.uk/zhongwen/trad/science/2014/06/140602_solar_airplane.shtml";
+//$link="http://www.bbc.co.uk/zhongwen/trad/weather/";
+//$link="http://www.cool3c.com/article/81507";
+//$link="http://trendsfolio.com/2014/06/seeme-lets-members-create-t-shirts-designs-launches-first-app/";
 
 //Main code--------------------------------
 //1. Build a new class
@@ -131,7 +136,7 @@ function parser_link($link, $result){
       $og_info[3]=iconv("big5","UTF-8",$og_info[3]);
     
   //Search
-    if (strpos ($og_info[2], "og:image")!==false)
+    if (strpos ($og_info[2], "og:image")!==false  && $og1->image=="none")
       $og1->image=$og_info[3];
     if (strpos ($og_info[2], "og:title")!==false)
       $og1->title=html_entity_decode($og_info[3], ENT_QUOTES, 'UTF-8');
@@ -231,7 +236,7 @@ function parser_link($link, $result){
     //print_r($og_info);
   }
 //Third SEARCH End--- wiki ---------------------------
-
+/*
 //Find First Image -------------------------------
   if($og1->image=="none"){
     if(preg_match_all('#<img[^s]*\ssrc=[\'"]([^\'"]*)[\'"] [^>]*>#', $result, $og_imgs, PREG_SET_ORDER))
@@ -241,6 +246,7 @@ function parser_link($link, $result){
     //print_r($og_imgs);
   }
 //Find First Image End ---------------------------
+*/
 }
 
 /*
